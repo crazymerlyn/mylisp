@@ -1,7 +1,7 @@
 default: mylisp
 
 mylisp: mylisp.c
-	gcc $< mpc/mpc.c -o $@ -lreadline -Wall -pedantic
+	gcc $< mpc/mpc.c -o $@ -lreadline -Wall -pedantic -Wextra -Werror
 
 run: mylisp
 	./mylisp

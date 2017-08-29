@@ -420,6 +420,7 @@ void lenv_def(lenv *e, lval *k, lval *v) {
 }
 
 lval *builtin_head(lenv *e, lval *a) {
+    (void)e;
     LASSERT(a, a->count == 1,
             "Function 'head' passed too many arguments. "
             "Got %i, Expected %i.",
@@ -438,6 +439,7 @@ lval *builtin_head(lenv *e, lval *a) {
 }
 
 lval *builtin_tail(lenv *e, lval *a) {
+    (void)e;
     LASSERT(a, a->count == 1,
             "Function 'tail' passed too many arguments. "
             "Got %i, Expected %i.",
@@ -456,6 +458,7 @@ lval *builtin_tail(lenv *e, lval *a) {
 }
 
 lval *builtin_list(lenv *e, lval *a) {
+    (void)e;
     a->type = LVAL_QEXPR;
     return a;
 }
@@ -485,6 +488,7 @@ lval *lval_join(lval *x, lval *y) {
 }
 
 lval *builtin_join(lenv *e, lval *a) {
+    (void)e;
     for (int i = 0; i < a->count; i++) {
         LASSERT(a, a->cell[i]->type == LVAL_QEXPR,
                 "Function 'join' passed argument of incorrect type. "
@@ -503,6 +507,7 @@ lval *builtin_join(lenv *e, lval *a) {
 }
 
 lval *builtin_lambda(lenv *e, lval *a) {
+    (void)e;
     LASSERT_NUM("\\", a, 2);
     LASSERT_TYPE("\\", a, 0, LVAL_QEXPR);
     LASSERT_TYPE("\\", a, 1, LVAL_QEXPR);
@@ -554,6 +559,7 @@ int lval_eq(lval *x, lval *y) {
 }
 
 lval *builtin_cmp(lenv *e, lval *a, char *op) {
+    (void)e;
     LASSERT_NUM(op, a, 2);
 
     int r;
@@ -577,6 +583,7 @@ lval *builtin_ne(lenv *e, lval *a) {
 }
 
 lval *builtin_ord(lenv *e, lval *a, char *op) {
+    (void)e;
     LASSERT_NUM(op, a, 2);
     LASSERT_TYPE(op, a, 0, LVAL_NUM);
     LASSERT_TYPE(op, a, 1, LVAL_NUM);
@@ -636,6 +643,7 @@ lval *builtin_if(lenv *e, lval *a) {
 }
 
 lval *builtin_op(lenv *e, lval *a, char *op) {
+    (void)e;
     for (int i = 0; i < a->count; ++i) {
         LASSERT(a, a->cell[i]->type == LVAL_NUM,
                 "Function '%s' passed invalid type for argument %i. "
@@ -832,6 +840,7 @@ void lenv_add_builtins(lenv *e) {
 }
 
 int main(int argc, char **argv) {
+    (void)argc; (void) argv;
     printf("Mylisp version 0.0.0\n");
     printf("Press Ctrl-c to Exit\n");
 
