@@ -953,6 +953,14 @@ void lenv_add_builtins(lenv *e) {
     lenv_add_builtin(e, "/", builtin_div);
 }
 
+void load_file(lenv *e, char *file) {
+    lval *args = lval_add(lval_sexpr(), lval_str(file));
+    lval *x = builtin_load(e, args);
+
+    if (x->type == LVAL_ERR) lval_println(x);
+    lval_del(x);
+}
+
 int main(int argc, char **argv) {
     printf("Mylisp version 0.0.0\n");
     printf("Press Ctrl-c to Exit\n");
@@ -981,12 +989,10 @@ int main(int argc, char **argv) {
     lenv *e = lenv_new();
     lenv_add_builtins(e);
 
-    for (int i = 1; i < argc; ++i) {
-        lval *args = lval_add(lval_sexpr(), lval_str(argv[i]));
-        lval *x = builtin_load(e, args);
+    load_file(e, "stdlib.lisp");
 
-        if (x->type == LVAL_ERR) lval_println(x);
-        lval_del(x);
+    for (int i = 1; i < argc; ++i) {
+        load_file(e, argv[i]);
     }
 
     while (1) {
