@@ -300,6 +300,7 @@ lval *lval_read(mpc_ast_t *t) {
         if (strcmp(t->children[i]->contents, "{") == 0) continue;
         if (strcmp(t->children[i]->contents, "}") == 0) continue;
         if (strcmp(t->children[i]->tag, "regex") == 0) continue;
+        if (strstr(t->children[i]->tag, "comment")) continue;
         x = lval_add(x, lval_read(t->children[i]));
     }
 
@@ -892,6 +893,7 @@ int main(int argc, char **argv) {
 
     mpc_parser_t *Number = mpc_new("number");
     mpc_parser_t *String = mpc_new("string");
+    mpc_parser_t *Comment = mpc_new("comment");
     mpc_parser_t *Symbol = mpc_new("symbol");
     mpc_parser_t *Sexpr = mpc_new("sexpr");
     mpc_parser_t *Qexpr = mpc_new("qexpr");
@@ -902,12 +904,13 @@ int main(int argc, char **argv) {
       " \
        number   : /-?[0-9]+/; \
        string   : /\"(\\\\.|[^\"])*\"/; \
+       comment  : /;[^\\r\\n]*/; \
        symbol   : /[a-zA-Z0-9_+\\-*\\/\\\\=<>!&]+/ ; \
        sexpr    : '(' <expr>* ')' ; \
        qexpr    : '{' <expr>* '}' ; \
-       expr     : <number> | <string> | <symbol> | <sexpr> | <qexpr> ; \
+       expr     : <number> | <string> | <comment> | <symbol> | <sexpr> | <qexpr> ; \
        lispy    : /^/ <expr>* /$/ ; \
-      ", Number, String, Symbol, Sexpr, Qexpr, Expr, Lispy);
+      ", Number, String, Comment, Symbol, Sexpr, Qexpr, Expr, Lispy);
 
     lenv *e = lenv_new();
     lenv_add_builtins(e);
@@ -932,7 +935,7 @@ int main(int argc, char **argv) {
         free(input);
     }
 
-    mpc_cleanup(7, Number, String, Symbol, Sexpr, Qexpr, Expr, Lispy);
+    mpc_cleanup(8, Number, String, Comment, Symbol, Sexpr, Qexpr, Expr, Lispy);
     lenv_del(e);
 
     return 0;
