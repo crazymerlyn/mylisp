@@ -894,6 +894,19 @@ lval *builtin_load(lenv *e, lval *a) {
     }
 }
 
+lval *builtin_print(lenv *e, lval *a) {
+    (void)e;
+    for (int i = 0; i < a->count; ++i) {
+        lval_print(a->cell[i]);
+        putchar(' ');
+    }
+
+    putchar('\n');
+    lval_del(a);
+
+    return lval_sexpr();
+}
+
 void lenv_add_builtin(lenv *e, char *name, lbuiltin func) {
     lval *k = lval_sym(name);
     lval *v = lval_func(func);
@@ -911,6 +924,7 @@ void lenv_add_builtins(lenv *e) {
     lenv_add_builtin(e, "join", builtin_join);
     lenv_add_builtin(e, "def", builtin_def);
     lenv_add_builtin(e, "load", builtin_load);
+    lenv_add_builtin(e, "print", builtin_print);
     lenv_add_builtin(e, "\\", builtin_lambda);
 
     lenv_add_builtin(e, "if", builtin_if);
